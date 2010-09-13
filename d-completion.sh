@@ -1,25 +1,25 @@
+_dmd_command_options="$(dmd --help 2>&1 | sed -n 's/^\s*\(-\+\w*\).*/\1/p' | sed 's/filename\|docdir\|directory\|path\|linkerflag\|objdir//g' | sort -u)"
+
 _dmd()
 {
-    local cur opts
+    local cur opts versions
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
-    prev="${COMP_WORDS[COMP_CWORD -1 ]}"
-    opts="-c -cov -d -Dd -debug -debug= -debuglib= -defaultlib= -deps= -Df -D -fPIC -g -gc -Hd --help -Hf -H -ignore -inline -I -J -lib -L -man -map -noboundscheck -nofloat -od -o- -of  -O -op -profile -quiet -release -run -unittest -version= -vtls -v -w -wi -Xf -X"
-    
+
     case "${cur}" in
-    -L-*)
-        COMPREPLY=( $( compgen -W "$( ld --help 2>&1 | \
-            sed -ne 's/.*\(--[-A-Za-z0-9]\{1,\}\).*/-L\1/p' | sort -u )" -- "$cur" ) )
-        ;;
-    -L*)
-        COMPREPLY=( $(compgen -f -X '\.*' -P "-L" -- ${cur#-L}) )
-        ;;
-    -*)
-        COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
-        ;;
-    *)
-        _filedir '@(d|di|D|DI|ddoc|DDOC)'
-        ;;
+        -L-*) # match linker options
+            COMPREPLY=( $( compgen -W "$( ld --help 2>&1 | \
+                sed -ne 's/.*\(--[-A-Za-z0-9]\{1,\}\).*/-L\1/p' | sort -u )" -- "$cur" ) )
+            ;;
+        -L*) # match linker files (any except hidden)
+            COMPREPLY=( $(compgen -f -X '\.*' -P "-L" -- ${cur#-L}) )
+            ;;
+        -*) # match dmd options
+            COMPREPLY=( $(compgen -W "${_dmd_command_options}" -- ${cur}) )
+            ;;
+        *) # match d files
+            _filedir '@(d|di|D|DI|ddoc|DDOC)'
+            ;;
     esac
     return 0
 }
@@ -32,13 +32,13 @@ _rdmd()
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
     sofar="${COMP_WORDS[@]:1:COMP_CWORD}"
-    opts="--main --build-only --chatty --compiler= --help --eval= --man --force --dry-run --loop -c -cov -d -Dd -debug -debug= -debuglib= -defaultlib= -deps= -Df -D -fPIC -g -gc -Hd --help -Hf -H -ignore -inline -I -J -lib -L -man -map -noboundscheck -nofloat -od -o- -of  -O -op -profile -quiet -release -run -unittest -version= -vtls -v -w -wi -Xf -X"
-
+    opts="$_dmd_command_options $(rdmd --help | sed -n 's/^\s*\(--\(\w\|-\)*\).*/\1/p')"
+    
     for i in $sofar
     do
         if [ -e $i ]
         then
-            _filedir '@(*)'
+            _filedir
             return 0
         fi
     done
