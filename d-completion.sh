@@ -2,7 +2,7 @@ _dmd_command_options="$(dmd --help 2>&1 | sed -n 's/^\s*\(-\+\w*\).*/\1/p' | sed
 
 _dmd()
 {
-    local cur opts versions
+    local cur opts
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
 
