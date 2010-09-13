@@ -6,20 +6,22 @@ _dmd()
     prev="${COMP_WORDS[COMP_CWORD -1 ]}"
     opts="-c -cov -d -Dd -debug -debug= -debuglib= -defaultlib= -deps= -Df -D -fPIC -g -gc -Hd --help -Hf -H -ignore -inline -I -J -lib -L -man -map -noboundscheck -nofloat -od -o- -of  -O -op -profile -quiet -release -run -unittest -version= -vtls -v -w -wi -Xf -X"
     
-    if [[ "$cur" == -L-* ]]; then
+    case "${cur}" in
+    -L-*)
         COMPREPLY=( $( compgen -W "$( ld --help 2>&1 | \
             sed -ne 's/.*\(--[-A-Za-z0-9]\{1,\}\).*/-L\1/p' | sort -u )" -- "$cur" ) )
-            return 0;
-    elif [[ "$cur" == -L* ]]; then
+        ;;
+    -L*)
         COMPREPLY=( $(compgen -f -X '\.*' -P "-L" -- ${cur#-L}) )
-        return 0;
-    elif [[ ${cur} == -* ]] ; then
+        ;;
+    -*)
         COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
-        return 0
-    else
+        ;;
+    *)
         _filedir '@(d|di|D|DI|ddoc|DDOC)'
-        return 0
-    fi
+        ;;
+    esac
+    return 0
 }
 
 complete -F _dmd dmd
