@@ -11,9 +11,12 @@ _dmd()
             COMPREPLY=( $( compgen -W "$( ld --help 2>&1 | \
                 sed -ne 's/.*\(--[-A-Za-z0-9]\{1,\}\).*/-L\1/p' | sort -u )" -- "$cur" ) )
             ;;
-        -L*) # match linker files (any except hidden)
-            COMPREPLY=( $(compgen -f -X '\.*' -P "-L" -- ${cur#-L}) )
+        -L*) # match linker files
+            COMPREPLY=( $(compgen -f -P "-L" -- ${cur#-L}) )
             ;;
+        -I*) # match import paths
+            COMPREPLY=( $(compgen -d -P "-I" -- ${cur#-I}) )
+            ;;    
         -*) # match dmd options
             COMPREPLY=( $(compgen -W "${_dmd_command_options}" -- ${cur}) )
             ;;
