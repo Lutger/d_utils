@@ -16,9 +16,12 @@ _dmd()
             ;;
         -I*) # match import paths
             COMPREPLY=( $(compgen -d -P "-I" -- ${cur#-I}) )
-            ;;    
+            ;;
         -*) # match dmd options
             COMPREPLY=( $(compgen -W "${_dmd_command_options}" -- ${cur}) )
+            ;;
+        @*) # match command file
+            COMPREPLY=( $(compgen -f -P "@" -- ${cur#@}) )
             ;;
         *) # match d files
             _filedir '@(d|di|D|DI|ddoc|DDOC)'
@@ -36,7 +39,7 @@ _rdmd()
     cur="${COMP_WORDS[COMP_CWORD]}"
     sofar="${COMP_WORDS[@]:1:COMP_CWORD}"
     opts="$_dmd_command_options $(rdmd --help | sed -n 's/^\s*\(--\(\w\|-\)*\).*/\1/p')"
-    
+
     for i in $sofar
     do
         if [ -e $i ]
@@ -45,7 +48,7 @@ _rdmd()
             return 0
         fi
     done
-    
+
     if [[ ${cur} == -* ]] ; then
         COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
         return 0
