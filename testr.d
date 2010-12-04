@@ -1,3 +1,11 @@
+/** A script for running unittests
+ * 
+ * Author: Lutger Blijdestijn
+ *
+ * Website: https://github.com/Lutger/d_utils
+ *
+ * Written in the D programming language
+ */
 module testr;
 import std.algorithm;
 import std.stdio;
@@ -23,7 +31,7 @@ int main(string[] args)
         writeln("D unittest runner. Usage: testr [options] [dmdoptions]");
         writeln();
         writeln("   -i, --include <path>      .d file or directory to unittest, defaults to the current directory");
-        writeln("   -n, --nomain  <path>      same as above, except that these contain a main entry");
+        writeln("   -n, --nomain  <path>      same as above, except that for these modules a main entry point will not be linked in");
         writeln("   -e, --exclude <pattern>   pattern to exclude modules, enquote to prevent shell expansion");
         writeln("   -f, --flat                directories are recursively scanned by default, this option will prevent it");
         writeln();
