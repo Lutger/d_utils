@@ -9,7 +9,8 @@ This enables bash completion for the dmd compiler and rdmd. To use it, the *bash
 Now options to dmd and rdmd should be autocompleted by hitting the tab key. To enable completion without invoking the script everytime, copy it to some directory of choice and run it from .bashrc. For example if you install it as ~/bin/d-completion.sh add the following lines to ~/.bashrc:
     . ~/bin/d-completion.sh
 
-For more information on making your own bash completion scripts, this is a handy tutorial: http://www.debian-administration.org/article/An_introduction_to_bash_completion_part_1
+For more information on making your own bash completion scripts, this is a handy tutorial: 
+[introduction to bash completion](http://www.debian-administration.org/article/An_introduction_to_bash_completion_part_1)
 
 shBrushD.js 
 --------------------------------
