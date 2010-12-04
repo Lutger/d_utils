@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link href="http://alexgorbatchev.com/pub/sh/current/styles/shCore.css" rel="stylesheet" type="text/css" />
+        <link href="http://alexgorbatchev.com/pub/sh/current/styles/shThemeDefault.css" rel="stylesheet" type="text/css" />
+        <script src="http://alexgorbatchev.com/pub/sh/current/scripts/shCore.js" type="text/javascript"></script>
+        <script src="shBrushD.js" type="text/javascript"></script>
+        <title>Syntax highlighting D with Javascript</title>
+        <style>
+            body {
+                min-height:100%;
+                position:absolute;
+                margin:0;
+                width:100%;
+            }
+            div.content {
+                width:70%;
+                margin: 0 auto;
+            }
+            figure {
+                display:block;
+                width:50em;
+                margin: 2em auto;
+            }
+            figcaption {
+                text-align:center;
+                font-style: italic;
+                display:block;
+            }
+            footer {
+                position:absolute;
+                bottom:1em;
+                width:100%;
+                text-align:center;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="content">
+            <article>
+                <h1>Syntax highlighting D code with javascript</h1>
+
+                This script for syntax highlighting D code is to be used
+                with the <a href="http://alexgorbatchev.com/SyntaxHighlighter/">SyntaxHighlighting</a> library. 
+                It is quite easy to set up, see the following links for more information:
+                <ul>
+                    <li>
+                        <a href="http://alexgorbatchev.com/SyntaxHighlighter/manual/installation.html">installation</a>
+                    </li>
+                    <li>
+                        <a href="http://alexgorbatchev.com/SyntaxHighlighter/manual/configuration/">configuration</a>
+                    </li>
+                </ul>
+
+                There are some limitations to the current D brush - such as nested comments - but for most snippets it should be more than
+                adequate. The D brush can be downloaded from its <a href="https://github.com/Lutger/d_utils">github repository</a>.
+
+                <figure>
+                    <!-- Using the script tags obviates the need for html encoding -->
+                    <script type="syntaxhighlighter" class="brush: d">
+                        <![CDATA[
+                        int[] arr = [ 1, 2, 3, 4, 5 ];
+                        // Sum all elements
+                        auto small = filter!("a < 3")(arr);
+                        assert(small == [ 1, 2 ]);
+                        // In combination with chain() to span multiple ranges
+                        int[] a = [ 3, -2, 400 ];
+                        int[] b = [ 100, -101, 102 ];
+                        auto r = filter!("a > 0")(chain(a, b));
+                        assert(equal(r, [ 3, 400, 100, 102 ]));
+                        // Mixing convertible types is fair game, too
+                        double[] c = [ 2.5, 3.0 ];
+                        auto r1 = filter!("cast(int) a != a")(chain(c, a, b));
+                        assert(r1 == [ 2.5 ]);
+                        ]]>
+                    </script>
+                    <figcaption>Example of <a href="http://www.digitalmars.com/d/2.0/phobos/std_algorithm.html#filter">std.algorithm.filter</a> </figcaption>
+                </figure>
+            </article>
+            
+        </div><footer>
+                <address>Created by <a href="https://github.com/Lutger"> Lutger Blijdestijn</a>. Issues can be reported to the <a href="https://github.com/Lutger/d_utils">github repository</a> </address>
+            </footer>
+        <script type="text/javascript">
+            SyntaxHighlighter.all();
+        </script>
+    </body>
+</html>
