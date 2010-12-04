@@ -15,3 +15,18 @@ For more information on making your own bash completion scripts, this is a handy
 shBrushD.js 
 --------------------------------
 Brush for the [syntaxhighlighter](http://alexgorbatchev.com/SyntaxHighlighter/) javascript library. See shBrushD.html for an example.
+
+testr.d
+--------------------------------
+A simple unittest runner that recursively scans a directory for .d files to unittest.
+
+<pre>
+D unittest runner. Usage: testr [options] [dmdoptions]
+
+   -i, --include <path>      .d file or directory to unittest, defaults to the current directory
+   -n, --nomain  <path>      same as above, except that these contain a main entry
+   -e, --exclude <pattern>   pattern to exclude modules, enquote to prevent shell expansion
+   -f, --flat                directories are recursively scanned by default, this option will prevent it
+
+Every module found will be unittested, options not recognized will be passed to (r)dmd.
+</pre>
