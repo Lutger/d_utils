@@ -22,7 +22,7 @@ int main(string[] args)
 {
     string[] include;
     string[] exclude;
-    string[] nomain;
+    bool nomain = false;
     bool flat = false;
     bool help = false;
 
@@ -30,12 +30,16 @@ int main(string[] args)
     {
         writeln("D unittest runner. Usage: testr [options] [dmdoptions]");
         writeln();
-        writeln("   -i, --include <path>      .d file or directory to unittest, defaults to the current directory");
-        writeln("   -n, --nomain  <path>      same as above, except that for these modules a main entry point will not be linked in");
-        writeln("   -e, --exclude <pattern>   pattern to exclude modules, enquote to prevent shell expansion");
-        writeln("   -f, --flat                directories are recursively scanned by default, this option will prevent it");
+        writeln("  -i, --include <path>      .d file or directory to scan for, defaults to");
+        writeln("                            the current directory");
+        writeln("  -n, --nomain              do not link in a main entry point");
+        writeln("  -e, --exclude <pattern>   pattern to exclude modules, enquote to prevent");
+        writeln("                            shell expansion");
+        writeln("  -f, --flat                directories are recursively scanned by default, ");
+        writeln("                            this option will prevent it");
         writeln();
-        writeln("Every module found will be unittested, options not recognized will be passed to (r)dmd.");
+        writeln("Every module found will be unittested, options not recognized will be passed ");
+        writeln("to (r)dmd. The exit code of testr is the number of tests that have failed.");
     }
 
     try getopt(args,
@@ -47,6 +51,7 @@ int main(string[] args)
                "help|h", &help);
     catch(Exception ex)
     {
+        writeln(ex);
         printHelp();
         return 1;
     }
@@ -60,9 +65,8 @@ int main(string[] args)
     args = args[1..$];
 
     string[] modules;
-    string[] modulesWithMain;
 
-    if (include.length + modulesWithMain.length == 0)
+    if (!include)
         include ~= ".";
 
     bool isExcluded(string filepath)
@@ -81,7 +85,7 @@ int main(string[] args)
         {
             if (filepath.exists() && !isExcluded(filepath) )
             {
-                if (filepath.isfile() && filepath.getExt() == ".d")
+                if (filepath.isfile() && filepath.getExt() == "d")
                 {
                     result ~= filepath;
                 }
@@ -92,14 +96,14 @@ int main(string[] args)
                             result ~= f;
                 }
             }
+
         }
         return result;
-        
     }
 
+   
     modules ~= findModules(include);
-    modulesWithMain ~= findModules(nomain);
-
+    
     int numTested;
     string[] failedModules;
 
@@ -120,9 +124,11 @@ int main(string[] args)
             writeln();
         }
     }
-    
-    executeTests(modules, "rdmd --main -unittest " ~ std.string.join(args, " "));
-    executeTests(modulesWithMain, "rdmd -unittest " ~ std.string.join(args, " "));
+    auto cmd = nomain
+        ? "rdmd -unittest " ~ std.string.join(args, " ")
+        : "rdmd --main -unittest " ~ std.string.join(args, " ");
+
+    executeTests(modules, cmd);
 
     if ( failedModules.length )
     {
