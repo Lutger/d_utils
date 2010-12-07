@@ -22,7 +22,7 @@ testr.d
 --------------------------------
 A simple unittest runner that recursively scans a directory for .d files to unittest.
 
-`
+<pre>
 D unittest runner. Usage: testr [options] [dmdoptions]
 
   -i, --include <path>      .d file or directory to scan for, defaults to
@@ -35,7 +35,7 @@ D unittest runner. Usage: testr [options] [dmdoptions]
 
 Every module found will be unittested, options not recognized will be passed
 to (r)dmd. The exit code of testr is the number of tests that have failed.
-`
+</pre>
 
 
 traceviewer.d
