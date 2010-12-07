@@ -40,6 +40,6 @@ to (r)dmd. The exit code of testr is the number of tests that have failed.
 
 traceviewer.d
 --------------------------------
-This tool can create an html page from the trace.log file produced by the builtin dmd profile. It will demangle the symbols found, and tries to make a
+This tool can create an html page from the trace.log file produced by the builtin dmd profiler. It will demangle the symbols found, and tries to make a
 more readable html page from the trace log. All symbols are hyperlinked for easy navigation. At the moment, you have to feed a trace.log file to it
 through stdin, and the html will be returned through stdout. Demangling is done with core.demangle.

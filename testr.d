@@ -20,11 +20,15 @@ import std.array;
 
 int main(string[] args)
 {
+    string defaultReportDir = "testreports";
     string[] include;
     string[] exclude;
     bool nomain = false;
     bool flat = false;
     bool help = false;
+    bool coverage;
+    bool report = false; //todo
+    string reportDir;    //todo
 
     void printHelp()
     {
@@ -48,7 +52,10 @@ int main(string[] args)
                "exclude|e", &exclude,
                "nomain|n", &nomain,
                "flat|f", &flat,
-               "help|h", &help);
+               "help|h", &help,
+               "coverage|cc", &coverage,
+               "report|r", &report
+               "reportdir|rd", &reportDir);
     catch(Exception ex)
     {
         writeln(ex);
@@ -63,11 +70,18 @@ int main(string[] args)
     }
 
     args = args[1..$];
-
-    string[] modules;
-
-    if (!include)
-        include ~= ".";
+    if (!include) include ~= ".";
+    if (report)
+    {
+        if (!reportDir)
+        {
+            reportDir = defaultReportDir;
+        }
+    }
+    else if (reportDir)
+    {
+        report = true;
+    }
 
     bool isExcluded(string filepath)
     {
@@ -101,8 +115,7 @@ int main(string[] args)
         return result;
     }
 
-   
-    modules ~= findModules(include);
+    string[] modules = findModules(include);
     
     int numTested;
     string[] failedModules;
@@ -124,10 +137,12 @@ int main(string[] args)
             writeln();
         }
     }
-    auto cmd = nomain
-        ? "rdmd -unittest " ~ std.string.join(args, " ")
-        : "rdmd --main -unittest " ~ std.string.join(args, " ");
 
+    string cmd = "rdmd -unittest ";
+    if (!nomain) cmd ~= "--main ";
+    if (coverage) cmd ~= " -cov ";
+    cmd ~= std.string.join(args, " ") ~ " ";
+    
     executeTests(modules, cmd);
 
     if ( failedModules.length )
